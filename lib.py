@@ -4,14 +4,14 @@ import time
 import random
 
 
-class Point:
+class _Point:
     def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
 
 
-class Line:
-    def __init__(self, starting: Point, ending: Point):
+class _Line:
+    def __init__(self, starting: _Point, ending: _Point):
         self.__starting = starting
         self.__ending = ending
 
@@ -51,12 +51,12 @@ class Window:
         self.__running = False
         print("Closing window...")
 
-    def draw_line(self, line: Line, fill_color="black"):
+    def draw_line(self, line: _Line, fill_color="black"):
         line.draw(self.__canvas, fill_color)
 
 
-class Cell:
-    def __init__(self, top_left: Point, bottom_right: Point, win: Window = None):
+class _Cell:
+    def __init__(self, top_left: _Point, bottom_right: _Point, win: Window = None):
         self.__x1 = top_left.x
         self.__y1 = top_left.y
         self.__x2 = bottom_right.x
@@ -72,44 +72,44 @@ class Cell:
         if self.__win is None:
             return
 
-        top_left = Point(self.__x1, self.__y1)
-        bottom_left = Point(self.__x1, self.__y2)
-        top_right = Point(self.__x2, self.__y1)
-        bottom_right = Point(self.__x2, self.__y2)
+        top_left = _Point(self.__x1, self.__y1)
+        bottom_left = _Point(self.__x1, self.__y2)
+        top_right = _Point(self.__x2, self.__y1)
+        bottom_right = _Point(self.__x2, self.__y2)
 
         if self.has_left_wall:
-            self.__win.draw_line(Line(top_left, bottom_left))
+            self.__win.draw_line(_Line(top_left, bottom_left))
         else:
-            self.__win.draw_line(Line(top_left, bottom_left), fill_color="white")
+            self.__win.draw_line(_Line(top_left, bottom_left), fill_color="white")
 
         if self.has_right_wall:
-            self.__win.draw_line(Line(top_right, bottom_right))
+            self.__win.draw_line(_Line(top_right, bottom_right))
         else:
-            self.__win.draw_line(Line(top_right, bottom_right), fill_color="white")
+            self.__win.draw_line(_Line(top_right, bottom_right), fill_color="white")
 
         if self.has_top_wall:
-            self.__win.draw_line(Line(top_left, top_right))
+            self.__win.draw_line(_Line(top_left, top_right))
         else:
-            self.__win.draw_line(Line(top_left, top_right), fill_color="white")
+            self.__win.draw_line(_Line(top_left, top_right), fill_color="white")
 
         if self.has_bottom_wall:
-            self.__win.draw_line(Line(bottom_left, bottom_right))
+            self.__win.draw_line(_Line(bottom_left, bottom_right))
         else:
-            self.__win.draw_line(Line(bottom_left, bottom_right), fill_color="white")
+            self.__win.draw_line(_Line(bottom_left, bottom_right), fill_color="white")
 
-    def draw_move(self, dest_cell: Cell, undo=False):
+    def draw_move(self, dest_cell: _Cell, undo=False):
         if self.__win is None:
             return
 
         origin_center_x = (self.__x1 + self.__x2) // 2
         origin_center_y = (self.__y1 + self.__y2) // 2
-        origin_pt = Point(origin_center_x, origin_center_y)
+        origin_pt = _Point(origin_center_x, origin_center_y)
 
         dest_center_x = (dest_cell.__x1 + dest_cell.__x2) // 2
         dest_center_y = (dest_cell.__y1 + dest_cell.__y2) // 2
-        dest_pt = Point(dest_center_x, dest_center_y)
+        dest_pt = _Point(dest_center_x, dest_center_y)
 
-        line = Line(origin_pt, dest_pt)
+        line = _Line(origin_pt, dest_pt)
         fill_color = "white" if undo else "green"
         self.__win.draw_line(line, fill_color)
 
@@ -150,14 +150,14 @@ class Maze:
         for i in range(self.__num_cols):
             col = []
             for j in range(self.__num_rows):
-                top_left = Point(
+                top_left = _Point(
                     self.__x1 + (i * self.__cell_size_x),
                     self.__y1 + (j * self.__cell_size_y),
                 )
-                bottom_right = Point(
+                bottom_right = _Point(
                     top_left.x + self.__cell_size_x, top_left.y + self.__cell_size_y
                 )
-                col.append(Cell(top_left, bottom_right, self.__win))
+                col.append(_Cell(top_left, bottom_right, self.__win))
             self.__cells.append(col)
         for i in range(self.__num_cols):
             for j in range(self.__num_rows):
@@ -295,15 +295,3 @@ class Maze:
 
     def __solve(self) -> bool:
         return self.__solve_r(0, 0)
-
-
-def main():
-    win = Window(800, 600)
-
-    _ = Maze(50, 50, 12, 12, 40, 40, win)
-
-    win.wait_for_close()
-
-
-if __name__ == "__main__":
-    main()

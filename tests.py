@@ -1,4 +1,4 @@
-from maze import Maze
+from lib import Maze
 
 test_maze = Maze(50, 50, 12, 12, 40, 40)
 
