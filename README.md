@@ -8,4 +8,4 @@ search. The graphical interface is provided by
 Assuming that you have a recent version of Python 3 installed (I used 3.9), and
 that it came bundled with the
 [tkinter](https://docs.python.org/3/library/tkinter.html) package, running this
-program should be as simple as running `python3 maze.py`.
+program should be as simple as running `python3 main.py`.
